@@ -313,7 +313,7 @@ const Dashboard = () => {
               <CardStatisticsVerticalComponent
                stats={tokenInfo.sellTax}
                trend='negative' 
-               title='Buy Tax'
+               title='Sell Tax'
                subtitle='in pct'
                 color='warning' 
                 icon={<HelpCircleOutline />}
