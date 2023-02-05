@@ -38,10 +38,18 @@ import Backdrop from '@mui/material/Backdrop';
 import HoneypotCheckerCaller from 'src/api/HoneypotCheckerCaller';
 import Web3 from 'web3';
 const {
-  RPC,
+  RPC_BSC,
   PANCAKE_SWAP_ROUTER_ADDRESS,
   WBNB_ADDRESS,
-  HONEYPOT_CHECKER_ADDRESS,
+  HONEYPOT_CHECKER_ADDRESS_BSC,
+  RPC_MATIC,
+  UNISWAP_ROUTER_ADDRESSV3,
+  MATIC_ADDRESS,
+  HONEYPOT_CHECKER_ADDRESS_MATIC,
+  RPC_ETH,
+  UNISWAP_ROUTER_ADDRESS,
+  WETH_ADDRESS,
+  HONEYPOT_CHECKER_ADDRESS_ETH,
 } = require("src/constants")("MAINNET");
 
 const { bep20Abi } = require("src/ABI");
@@ -137,10 +145,10 @@ const Dashboard = () => {
       
       if (chainId === 'bsc') {
 
-        const web3 = new Web3(RPC);
+        const web3 = new Web3(new Web3.providers.HttpProvider(RPC_BSC));
         const honeypotCheckerCaller = new HoneypotCheckerCaller(
           web3,
-          HONEYPOT_CHECKER_ADDRESS
+          HONEYPOT_CHECKER_ADDRESS_BSC
         )
 
         const {
@@ -198,8 +206,135 @@ const Dashboard = () => {
           
 
         
-      }
+      } else 
+      if (chainId === 'ethereum') {
+        const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ETH)); 
+        const honeypotCheckerCaller = new HoneypotCheckerCaller(
+          web3,
+          HONEYPOT_CHECKER_ADDRESS_ETH
+        )
 
+        const {
+          buyGas,
+          sellGas,
+          estimatedBuy,
+          exactBuy,
+          estimatedSell,
+          exactSell,
+        } = await honeypotCheckerCaller.check(UNISWAP_ROUTER_ADDRESS, [
+          WETH_ADDRESS,
+          tokenAddress,
+        ]);
+
+        const [buyTax, sellTax] = [
+          honeypotCheckerCaller.calculateTaxFee(estimatedBuy, exactBuy),
+          honeypotCheckerCaller.calculateTaxFee(estimatedSell, exactSell),
+        ]; 
+         
+
+        let verified=false;
+        let honeyPotCheck=false;
+        const verificationdata = await axios
+          .get(`https://api.etherscan.io/api?module=contract&action=getabi&address=${tokenAddress}&apikey=CTMK2UQQ1GZZNQ1P6X5ZAX1BPB7YQVEQKS`)
+          .then((response)=>{
+            if(response.data.status>0)verified=true;
+
+            console.log(response.data);
+            const honeyPotCheck = checkforHoneyPot(response.data.result)?'FAILED':'PASSED';
+            
+            console.log('hpchecl '+ honeyPotCheck);
+            setTokenInfo({
+              name:name,
+              symbol:symbol,
+              network:String(chainId).toUpperCase(),
+              dexId:String(dexId).toUpperCase(),
+              h1:h1,
+              buygas:buyGas,
+              sellgas:sellGas,
+              buyTax:buyTax,
+              sellTax:sellTax,
+              liquidity:liquidity, 
+              priceUsd:Number(priceUsd).toFixed(8)+' (in usd )', 
+              pairCreatedAt:new Date(pairCreatedAt).toLocaleDateString(),
+              isHoneyPot:honeyPotCheck, 
+              verified:verified,
+              blacklisted:!honeyPotCheck
+            })
+            setIsLoading(false);
+
+
+          })
+          .catch((err) => null);
+
+          
+
+        
+      } else 
+      if (chainId === 'polygon') {
+        const web3 = new Web3(new Web3.providers.HttpProvider(RPC_MATIC));  
+
+ 
+        const honeypotCheckerCaller = new HoneypotCheckerCaller(
+          web3,
+          HONEYPOT_CHECKER_ADDRESS_MATIC
+        )
+
+        const {
+          buyGas,
+          sellGas,
+          estimatedBuy,
+          exactBuy,
+          estimatedSell,
+          exactSell,
+        } = await honeypotCheckerCaller.check(UNISWAP_ROUTER_ADDRESSV3, [
+          MATIC_ADDRESS,
+          tokenAddress,
+        ]);
+
+        const [buyTax, sellTax] = [
+          honeypotCheckerCaller.calculateTaxFee(estimatedBuy, exactBuy),
+          honeypotCheckerCaller.calculateTaxFee(estimatedSell, exactSell),
+        ]; 
+         
+
+        let verified=false;
+        let honeyPotCheck=false;
+        const verificationdata = await axios
+          .get(`https://api.polygonscan.com/api?module=contract&action=getabi&address=${tokenAddress}&apikey=GHAVAWYIQBVF4I5BAWECNV6TTE1QKXDNAH`)
+          .then((response)=>{
+            if(response.data.status>0)verified=true;
+
+            console.log(response.data);
+            const honeyPotCheck = checkforHoneyPot(response.data.result)?'FAILED':'PASSED';
+            
+            console.log('hpchecl '+ honeyPotCheck);
+            setTokenInfo({
+              name:name,
+              symbol:symbol,
+              network:String(chainId).toUpperCase(),
+              dexId:String(dexId).toUpperCase(),
+              h1:h1,
+              buygas:buyGas,
+              sellgas:sellGas,
+              buyTax:buyTax,
+              sellTax:sellTax,
+              liquidity:liquidity, 
+              priceUsd:Number(priceUsd).toFixed(8)+' (in usd )', 
+              pairCreatedAt:new Date(pairCreatedAt).toLocaleDateString(),
+              isHoneyPot:honeyPotCheck, 
+              verified:verified,
+              blacklisted:!honeyPotCheck
+            })
+            setIsLoading(false);
+
+
+          })
+          .catch((err) => null);
+
+          
+
+        
+      }
     }
 
     console.log(dexscreener.data.pairs[0]);

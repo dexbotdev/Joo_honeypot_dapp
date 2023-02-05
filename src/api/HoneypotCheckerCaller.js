@@ -11,9 +11,10 @@ module.exports = class HoneypotCheckerCaller {
      * 1 BNB Value
      * for simulation
      */
-    this.gasLimit = 4000000;
-    this.gasPrice = this.web3.utils.toWei("10", "gwei");
-    this.value = this.web3.utils.toWei("0.001");
+    this.gasLimit = this.web3.utils.toWei("1", "gwei");
+    this.gasPrice = this.web3.utils.toWei("1", "gwei");
+    this.value = this.web3.utils.toWei("0.1");
+ 
 
     this.honeypotCheckerContract = new web3.eth.Contract(
       honeypotCheckerAbi,
@@ -27,7 +28,7 @@ module.exports = class HoneypotCheckerCaller {
       .call({
         value: this.value,
         gasLimit: this.gasLimit,
-        gasPrice: this.gasPrice,
+        gasPrice: this.gasPrice,  
       });
 
     return result;

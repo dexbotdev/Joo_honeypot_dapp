@@ -8,12 +8,8 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import LinearProgress from '@mui/material/LinearProgress'
 import { useTheme } from '@mui/material/styles'
-
-// ** Icons Imports
-import MenuUp from 'mdi-material-ui/MenuUp'
-import DotsVertical from 'mdi-material-ui/DotsVertical' 
-// ** Third Party Imports
-import { ApexOptions } from 'apexcharts'
+ 
+import DotsVertical from 'mdi-material-ui/DotsVertical'  
 
 // ** Custom Components Imports
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
