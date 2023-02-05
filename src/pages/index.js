@@ -135,14 +135,20 @@ const Dashboard = () => {
 
       const quotePrice =2*pusd/pnat;
 
-      const liquidityinQuote = Number(dexscreener.data.pairs[0].liquidity.usd)/quotePrice;
+      let liquidityinQuote = 0;
+      let liquiditys = 0;
+      if(dexscreener.data.pairs[0]?.liquidity)
+      {
+        liquidityinQuote=Number(dexscreener.data.pairs[0]?.liquidity?.usd)/quotePrice;
+        liquiditys=Number(dexscreener.data.pairs[0]?.liquidity?.usd);
+    }
 
       const chainId = dexscreener.data.pairs[0].chainId;
       const dexId = dexscreener.data.pairs[0].dexId;
       const name = dexscreener.data.pairs[0].baseToken.name;
       const symbol = dexscreener.data.pairs[0].baseToken.symbol;
       const priceUsd = dexscreener.data.pairs[0].priceUsd;
-      const liquidity = Number(liquidityinQuote).toFixed(2)+dexscreener.data.pairs[0].quoteToken.symbol+' ($'+Number(dexscreener.data.pairs[0].liquidity.usd).toFixed(2)/2+')';
+      const liquidity = Number(liquidityinQuote).toFixed(2)+dexscreener.data.pairs[0].quoteToken.symbol+' ($'+liquiditys.toFixed(2)/2+')';
       const pairCreatedAt = dexscreener.data.pairs[0].pairCreatedAt;
       const h1 = dexscreener.data.pairs[0].priceChange.h1;
       
