@@ -39,7 +39,7 @@ module.exports = {
 
     // add new line above return
     'newline-before-return': 'off',
-
+    "padding-line-between-statements": 'off',
     // add new line below import
     'import/newline-after-import': "off",
 
