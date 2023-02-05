@@ -11,8 +11,8 @@ module.exports = class HoneypotCheckerCaller {
      * 1 BNB Value
      * for simulation
      */
-    this.gasLimit = this.web3.utils.toWei("1", "gwei");
-    this.gasPrice = this.web3.utils.toWei("1", "gwei");
+    this.gasLimit = 4000000;
+    this.gasPrice = this.web3.utils.toWei("5", "gwei");
     this.value = this.web3.utils.toWei("0.1");
  
 
@@ -23,7 +23,8 @@ module.exports = class HoneypotCheckerCaller {
   }
 
   async check(routerAddress, path) {
-    const result = await this.honeypotCheckerContract.methods
+    try{
+      const result = await this.honeypotCheckerContract.methods
       .check(routerAddress, path)
       .call({
         value: this.value,
@@ -32,6 +33,18 @@ module.exports = class HoneypotCheckerCaller {
       });
 
     return result;
+    }catch(error){
+      return {
+        buyGas:-1,
+        sellGas:-1,
+        estimatedBuy:-1,
+        exactBuy:-1,
+        estimatedSell:-1,
+        exactSell:-1,
+      }
+
+    }
+    
   }
 
   calculateTaxFee(estimatedPrice, exactPrice) {
