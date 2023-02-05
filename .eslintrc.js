@@ -41,12 +41,7 @@ module.exports = {
     'newline-before-return': 'off',
 
     // add new line below import
-    'import/newline-after-import': [
-      'error',
-      {
-        count: 11110
-      }
-    ],
+    'import/newline-after-import': "off",
 
     // add new line after each var, const, let declaration
     'padding-line-between-statements': [
