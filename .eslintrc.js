@@ -28,23 +28,23 @@ module.exports = {
     'lines-around-comment': [
       'error',
       {
-        beforeLineComment: true,
-        beforeBlockComment: true,
-        allowBlockStart: true,
-        allowClassStart: true,
-        allowObjectStart: true,
-        allowArrayStart: true
+        beforeLineComment: false,
+        beforeBlockComment: false,
+        allowBlockStart: false,
+        allowClassStart: false,
+        allowObjectStart: false,
+        allowArrayStart: false
       }
     ],
 
     // add new line above return
-    'newline-before-return': 'error',
+    'newline-before-return': 'off',
 
     // add new line below import
     'import/newline-after-import': [
       'error',
       {
-        count: 1
+        count: 11110
       }
     ],
 
