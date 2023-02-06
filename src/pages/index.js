@@ -117,6 +117,10 @@ const Dashboard = () => {
 
   const getTokenDetails = async (tokenAddress) => {
 
+    if(!Web3.utils.isAddress(tokenAddress)){
+      alert('Not a Valid Address');
+      return;
+    }
     setIsLoading(true);
     setTokenInfo({});
     const dexscreener = await axios
@@ -124,10 +128,13 @@ const Dashboard = () => {
       .then((res) => res)
       .catch((err) => null);
 
-      console.log(dexscreener.data);
+      if(dexscreener.data.pairs === null ){
 
-      if(dexscreener.data.pairs[0].chainId === 'bsc') console.log('******************* its BSC');
+        alert('Token data not updated');
+        return;
 
+      }
+ 
     if (dexscreener.data) {
 
       const pusd = Number(dexscreener.data.pairs[0].priceUsd);
@@ -156,8 +163,7 @@ const Dashboard = () => {
       if (chainId === 'bsc') {
 
 
-        console.log('******************* its BSC');
-
+ 
         const web3 = new Web3(new Web3.providers.HttpProvider(RPC_BSC));
         const honeypotCheckerCaller = new HoneypotCheckerCaller(
           web3,
@@ -176,8 +182,7 @@ const Dashboard = () => {
           tokenAddress,
         ]);
 
-        console.log('******************* its BSC '+buyGas);
-
+ 
         const [buyTax, sellTax] = [
           honeypotCheckerCaller.calculateTaxFee(estimatedBuy, exactBuy),
           honeypotCheckerCaller.calculateTaxFee(estimatedSell, exactSell),
